@@ -12,6 +12,7 @@ The system needs to be simple enough for non-technical family members while enfo
 - Enforce a role-based model: Administrator, Quota Owner, Regular User
 - Allow Quota Owners to manage their allotted periods and approve/decline requests
 - Allow Regular Users to request bookings in any Quota Owner's periods
+- Model room-level capacity so multiple families can share the house when desired
 - Sync confirmed bookings to Google Calendar
 - Present a clear calendar dashboard showing the full season
 
@@ -80,6 +81,36 @@ The system needs to be simple enough for non-technical family members while enfo
 
 **Rationale:** A calendar view is the core UI for seeing availability and bookings. An off-the-shelf component avoids reinventing complex date rendering and interaction logic.
 
+### 7. Room Model and Booking Granularity
+
+**Choice:** The house has five named sleeping rooms, each stored as a database entity. Bookings reference specific rooms. A user either selects individual rooms (partial booking, signalling room for others) or claims the whole house (all five rooms).
+
+**Room inventory (named after Norwegian architects):**
+
+| Room name    | Architect                         | Bed configuration                | Toddler bed | Sleeps    |
+|-------------|-----------------------------------|----------------------------------|-------------|-----------|
+| **Fehn**     | Sverre Fehn (Pritzker Prize 1997)  | Two separate single beds         | No          | 2         |
+| **Knutsen**  | Knut Knutsen (organic modernism)   | Double bed (conjoined)           | Yes         | 2 (+1)    |
+| **Selmer**   | Wenche Selmer (residential master) | Double bed (conjoined)           | Yes         | 2 (+1)    |
+| **Arneberg** | Arnstein Arneberg (Oslo City Hall) | Double bed (conjoined)           | No          | 2         |
+| **Backer**   | Lars Backer (functionalism pioneer)| Double bed (conjoined)           | No          | 2         |
+
+**Total capacity:** 10 adults + 2 toddlers.
+
+**Rationale:** Room-level granularity reflects how the house is actually used. Families often don't need all five rooms, and explicitly selecting rooms makes it visible that others are welcome to join for the same period. Whole-house mode covers the case where exclusive use is needed (e.g., hosting external guests). The architect naming gives each room a memorable identity and honours Norwegian architectural heritage (Le Corbusier is already taken by the Wi-Fi SSID).
+
+**Alternatives considered:**
+- Date-only bookings with no room model — simpler, but hides capacity and prevents shared stays
+- A generic "how many beds" number — loses the identity of specific rooms and makes it harder to show who's in which room
+
+### 8. Transition Day Overlap
+
+**Choice:** When one booking ends on day X and another begins on day X, both bookings are valid simultaneously on that day. The system explicitly allows this overlap on "transition days."
+
+**Rationale:** In practice the family uses transition days for shared lunches, dinners, or birthday celebrations. The departing family hasn't left yet, the arriving family has arrived, and everyone enjoys being together. Blocking same-day overlap would force awkward scheduling gaps. The real constraint is room availability — on a transition day both parties have their respective rooms.
+
+**Conflict rule:** Two bookings conflict if and only if they claim the same room AND their date ranges overlap by more than a single transition day. Formally: bookings A (rooms_A, start_A, end_A) and B (rooms_B, start_B, end_B) conflict when `rooms_A ∩ rooms_B ≠ ∅` AND `start_A < end_B` AND `start_B < end_A` — that is, a true multi-day overlap on a shared room. The case `end_A == start_B` (or vice versa) is the allowed transition day.
+
 ## Risks / Trade-offs
 
 - **Google API quotas** → The Calendar API has usage limits, but family-scale usage (tens of users) is well within free tier limits. Monitor usage if the family grows.
@@ -87,9 +118,10 @@ The system needs to be simple enough for non-technical family members while enfo
 - **Quota fairness disputes** → The system enforces structure but cannot resolve interpersonal disagreements. Mitigation: Administrator role can override allocations if needed; the system provides transparency via the dashboard.
 - **Single point of failure** → If Vercel or the database provider has downtime, the system is unavailable. Mitigation: acceptable risk for a family app; data is backed up via Prisma migrations and can be redeployed elsewhere.
 - **Scope creep** → Calendar sync adds OAuth complexity. Mitigation: implement booking management first, add calendar sync as a follow-up capability.
+- **Room model complexity** → Room-level bookings add UI and validation complexity compared to simple date bookings. Mitigation: keep the booking form simple — two clear modes ("select rooms" vs "whole house") and a visual room picker.
+- **Transition day edge cases** → Overlapping bookings on transition days could lead to more people than beds if both parties claim many rooms. Mitigation: the system enforces room-level constraints, so the total occupancy is bounded by the 5 rooms regardless.
 
 ## Open Questions
 
 - Should the system support recurring annual quota templates, or should Administrators set up quotas fresh each season?
-- What granularity for bookings — full days only, or allow half-day check-in/check-out times?
 - Should Quota Owners be able to delegate approval rights to another user in their branch?

@@ -1,26 +1,30 @@
 ## ADDED Requirements
 
 ### Requirement: Regular User can request a booking
-A Regular User SHALL be able to submit a booking request for a date range within any Quota Owner's allotted period.
+A Regular User SHALL be able to submit a booking request for a date range and specific rooms (or whole house) within any Quota Owner's allotted period.
 
-#### Scenario: Submit booking request
-- **WHEN** a Regular User selects a date range within a Quota Owner's period and submits a booking request
-- **THEN** the system SHALL create a booking request with status "pending" and notify the Quota Owner
+#### Scenario: Submit booking request with room selection
+- **WHEN** a Regular User selects a date range within a Quota Owner's period, chooses one or more rooms (or "Whole house"), and submits a booking request
+- **THEN** the system SHALL create a booking request with status "pending", the selected rooms recorded, and notify the Quota Owner
 
 #### Scenario: Request outside quota period
 - **WHEN** a Regular User attempts to request dates that fall outside any Quota Owner's period or span multiple periods
 - **THEN** the system SHALL reject the request and inform the user which periods the dates belong to
 
-#### Scenario: Request overlapping existing confirmed booking
-- **WHEN** a Regular User requests dates that overlap with an already confirmed booking
-- **THEN** the system SHALL warn the user about the overlap but still allow the request to be submitted (the Quota Owner decides)
+#### Scenario: Request for rooms already taken (non-transition overlap)
+- **WHEN** a Regular User requests rooms that are already claimed by a confirmed booking for overlapping dates (beyond a transition day)
+- **THEN** the system SHALL warn the user about the room conflict but still allow the request to be submitted (the Quota Owner decides)
+
+#### Scenario: Request on transition day with same rooms
+- **WHEN** a Regular User requests rooms starting on a day when another booking for those same rooms ends
+- **THEN** the system SHALL permit the request without a conflict warning, as this is a valid transition day
 
 ### Requirement: Quota Owner can request bookings in their own period
-A Quota Owner SHALL be able to book dates directly within their own quota period without needing approval.
+A Quota Owner SHALL be able to book dates and rooms directly within their own quota period without needing approval.
 
-#### Scenario: Quota Owner self-books
-- **WHEN** a Quota Owner selects dates within their own quota period
-- **THEN** the system SHALL create a booking with status "confirmed" immediately
+#### Scenario: Quota Owner self-books with room selection
+- **WHEN** a Quota Owner selects dates within their own quota period and chooses rooms (or "Whole house")
+- **THEN** the system SHALL create a booking with status "confirmed" immediately for the selected rooms
 
 ### Requirement: Quota Owner approves or declines requests
 A Quota Owner SHALL be able to approve or decline booking requests for dates within their allotted periods.
@@ -42,15 +46,15 @@ A user who made a booking request SHALL be able to cancel it. A Quota Owner SHAL
 
 #### Scenario: User cancels own pending request
 - **WHEN** a user cancels their own pending booking request
-- **THEN** the system SHALL remove the request and notify the Quota Owner
+- **THEN** the system SHALL remove the request, release the claimed rooms, and notify the Quota Owner
 
 #### Scenario: Quota Owner cancels confirmed booking in their period
 - **WHEN** a Quota Owner cancels a confirmed booking within their quota period
-- **THEN** the system SHALL change the booking status to "cancelled" and notify the booking holder
+- **THEN** the system SHALL change the booking status to "cancelled", release the rooms, and notify the booking holder
 
 #### Scenario: Administrator cancels any booking
 - **WHEN** an Administrator cancels any booking regardless of period ownership
-- **THEN** the system SHALL change the booking status to "cancelled" and notify both the booking holder and the Quota Owner
+- **THEN** the system SHALL change the booking status to "cancelled", release the rooms, and notify both the booking holder and the Quota Owner
 
 ### Requirement: Booking status lifecycle
 A booking SHALL progress through defined statuses: pending, confirmed, declined, or cancelled.

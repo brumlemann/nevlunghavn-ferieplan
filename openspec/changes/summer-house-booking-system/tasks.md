@@ -6,7 +6,7 @@
 - [ ] 1.4 Install UI dependencies (Tailwind CSS, react-big-calendar or similar calendar component)
 - [ ] 1.5 Create initial Prisma schema with User, Role, Season, QuotaPeriod, Booking, BookingRoom, and Room models
 - [ ] 1.6 Set up environment variables template (`.env.example`) for Google OAuth credentials, database URL, and NextAuth secret
-- [ ] 1.7 Create database seed script to populate the five rooms (Fehn, Knutsen, Selmer, Arneberg, Backer) with bed configuration and capacity
+- [ ] 1.7 Create database seed script to populate the five rooms (Fehn, Knutsen, Utzon, Arneberg, Korsmo) with bed configuration and capacity
 
 ## 2. Authentication (google-auth)
 

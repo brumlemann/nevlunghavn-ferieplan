@@ -85,19 +85,19 @@ The system needs to be simple enough for non-technical family members while enfo
 
 **Choice:** The house has five named sleeping rooms, each stored as a database entity. Bookings reference specific rooms. A user either selects individual rooms (partial booking, signalling room for others) or claims the whole house (all five rooms).
 
-**Room inventory (named after Norwegian architects):**
+**Room inventory (named after architects with family significance):**
 
-| Room name    | Architect                         | Bed configuration                | Toddler bed | Sleeps    |
-|-------------|-----------------------------------|----------------------------------|-------------|-----------|
-| **Fehn**     | Sverre Fehn (Pritzker Prize 1997)  | Two separate single beds         | No          | 2         |
-| **Knutsen**  | Knut Knutsen (organic modernism)   | Double bed (conjoined)           | Yes         | 2 (+1)    |
-| **Selmer**   | Wenche Selmer (residential master) | Double bed (conjoined)           | Yes         | 2 (+1)    |
-| **Arneberg** | Arnstein Arneberg (Oslo City Hall) | Double bed (conjoined)           | No          | 2         |
-| **Backer**   | Lars Backer (functionalism pioneer)| Double bed (conjoined)           | No          | 2         |
+| Room name    | Architect                          | Bed configuration                | Toddler bed | Sleeps    |
+|-------------|-------------------------------------|----------------------------------|-------------|-----------|
+| **Fehn**     | Sverre Fehn (Pritzker Prize 1997)   | Two separate single beds         | No          | 2         |
+| **Knutsen**  | Knut Knutsen (organic modernism)    | Double bed (conjoined)           | Yes         | 2 (+1)    |
+| **Utzon**    | Jørn Utzon (Sydney Opera House)     | Double bed (conjoined)           | Yes         | 2 (+1)    |
+| **Arneberg** | Arnstein Arneberg (Oslo City Hall)  | Double bed (conjoined)           | No          | 2         |
+| **Korsmo**   | Arne Korsmo (functionalism pioneer) | Double bed (conjoined)           | No          | 2         |
 
 **Total capacity:** 10 adults + 2 toddlers.
 
-**Rationale:** Room-level granularity reflects how the house is actually used. Families often don't need all five rooms, and explicitly selecting rooms makes it visible that others are welcome to join for the same period. Whole-house mode covers the case where exclusive use is needed (e.g., hosting external guests). The architect naming gives each room a memorable identity and honours Norwegian architectural heritage (Le Corbusier is already taken by the Wi-Fi SSID).
+**Rationale:** Room-level granularity reflects how the house is actually used. Families often don't need all five rooms, and explicitly selecting rooms makes it visible that others are welcome to join for the same period. Whole-house mode covers the case where exclusive use is needed (e.g., hosting external guests). The architect naming gives each room a memorable identity — most are Norwegian, with Utzon representing an international connection through personal family correspondence, and Korsmo honouring a special relationship with the family's own architects. Le Corbusier is already taken by the Wi-Fi SSID.
 
 **Alternatives considered:**
 - Date-only bookings with no room model — simpler, but hides capacity and prevents shared stays

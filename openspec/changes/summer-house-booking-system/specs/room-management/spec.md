@@ -8,9 +8,9 @@ The system SHALL maintain a registry of the five sleeping rooms in the summer ho
 - **THEN** the database SHALL be seeded with the following five rooms:
   - **Fehn** (Sverre Fehn): Two separate single beds, no toddler bed, sleeps 2
   - **Knutsen** (Knut Knutsen): Double bed (conjoined), toddler bed possible, sleeps 2+1
-  - **Selmer** (Wenche Selmer): Double bed (conjoined), toddler bed possible, sleeps 2+1
+  - **Utzon** (Jørn Utzon): Double bed (conjoined), toddler bed possible, sleeps 2+1
   - **Arneberg** (Arnstein Arneberg): Double bed (conjoined), no toddler bed, sleeps 2
-  - **Backer** (Lars Backer): Double bed (conjoined), no toddler bed, sleeps 2
+  - **Korsmo** (Arne Korsmo): Double bed (conjoined), no toddler bed, sleeps 2
 
 #### Scenario: View room details
 - **WHEN** any authenticated user views the room information page

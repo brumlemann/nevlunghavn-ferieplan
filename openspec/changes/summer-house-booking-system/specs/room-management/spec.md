@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Room inventory
-The system SHALL maintain a registry of the five sleeping rooms in the summer house, each with a unique name, bed configuration, and capacity details.
+The system SHALL maintain a registry of the five sleeping rooms in the summer house, each with a unique name, bed configuration, capacity details, and an architect profile.
 
 #### Scenario: Seed room data
 - **WHEN** the system is deployed for the first time
@@ -15,6 +15,26 @@ The system SHALL maintain a registry of the five sleeping rooms in the summer ho
 #### Scenario: View room details
 - **WHEN** any authenticated user views the room information page
 - **THEN** the system SHALL display each room's name, architect reference, bed configuration, toddler bed availability, and adult capacity
+
+### Requirement: Architect profile overlays
+Each room SHALL have a rich architect profile that users can view as an overlay popup. The profile SHALL include the architect's full name, lifespan, a short biography, notable works, and any family connection. External links (e.g., to museum collections) MAY be included.
+
+#### Scenario: View architect profile from room listing
+- **WHEN** a user clicks or taps on a room name or an info icon next to a room anywhere in the application (room list, booking form, calendar)
+- **THEN** the system SHALL display an overlay popup with the architect's profile
+
+#### Scenario: Seed architect profiles
+- **WHEN** the system is deployed for the first time
+- **THEN** the database SHALL be seeded with architect profiles for each room:
+  - **Fehn**: Sverre Fehn (1924–2009). Norway's most internationally acclaimed architect. Awarded the Pritzker Architecture Prize in 1997. Known for the Nordic Pavilion in Venice (1962) and the Hedmark Museum in Hamar (1973). A master of integrating modernist principles with Nordic landscape and light.
+  - **Knutsen**: Knut Knutsen (1903–1969). Pioneer of Norwegian organic modernism who championed architecture shaped by nature and site rather than imposed geometry. His own summer house at Portør (1949) became an icon of regionalist design and influenced a generation of Scandinavian architects.
+  - **Utzon**: Jørn Utzon (1918–2008). Danish architect whose Sydney Opera House (1973) is one of the most recognisable buildings of the 20th century. Awarded the Pritzker Prize in 2003. Maintained a personal correspondence with the family's architects, connecting this house to an international circle of modernist thinkers.
+  - **Arneberg**: Arnstein Arneberg (1882–1961). Designed Oslo City Hall together with Magnus Poulsson — one of Norway's most important public buildings. Also designed the United Nations Security Council Chamber in New York (1952). Bridged national romanticism and modernism.
+  - **Korsmo**: Arne Korsmo (1900–1968). A central figure in Norwegian modernism and professor at NTH Trondheim. Villa Dammann in Oslo (1932) is regarded as a breakthrough for functionalism in Norway. Also collaborated with Terje Moe on [Villa Klein in Knardal, Halden](https://www.nasjonalmuseet.no/en/collection/object/NAMF.00472.002), where Moe — then Korsmo's research assistant — did much of the design work. The Korsmo room honours a personal connection between the family's own architects and one of Norway's most influential modernists.
+
+#### Scenario: Administrator can edit architect profiles
+- **WHEN** an Administrator edits an architect profile text
+- **THEN** the system SHALL save the updated profile and display it in all subsequent overlay popups
 
 ### Requirement: Administrator can update room details
 An Administrator SHALL be able to update room descriptions and capacity details (e.g., if furniture changes), but SHALL NOT be able to add or remove rooms without a code change.

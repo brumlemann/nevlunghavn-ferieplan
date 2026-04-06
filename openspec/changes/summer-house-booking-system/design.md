@@ -93,7 +93,7 @@ The system needs to be simple enough for non-technical family members while enfo
 | **Knutsen**  | Knut Knutsen (organic modernism)    | Double bed (conjoined)           | Yes         | 2 (+1)    |
 | **Utzon**    | Jørn Utzon (Sydney Opera House)     | Double bed (conjoined)           | Yes         | 2 (+1)    |
 | **Arneberg** | Arnstein Arneberg (Oslo City Hall)  | Double bed (conjoined)           | No          | 2         |
-| **Korsmo**   | Arne Korsmo (functionalism pioneer) | Double bed (conjoined)           | No          | 2         |
+| **Korsmo**   | Arne Korsmo (Villa Dammann, Villa Klein with Terje Moe) | Double bed (conjoined)           | No          | 2         |
 
 **Total capacity:** 10 adults + 2 toddlers.
 

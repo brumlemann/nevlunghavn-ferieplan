@@ -6,7 +6,6 @@
 - [ ] 1.4 Install UI dependencies (Tailwind CSS, react-big-calendar or similar calendar component)
 - [ ] 1.5 Create initial Prisma schema with User, Role, Season, QuotaPeriod, Booking, BookingRoom, and Room models
 - [ ] 1.6 Set up environment variables template (`.env.example`) for Google OAuth credentials, database URL, and NextAuth secret
-- [ ] 1.7 Create database seed script to populate the five rooms (Fehn, Knutsen, Utzon, Arneberg, Korsmo) with bed configuration and capacity
 
 ## 2. Authentication (google-auth)
 
@@ -29,10 +28,12 @@
 
 ## 4. Room Management (room-management)
 
-- [ ] 4.1 Create Room model in Prisma schema (name, architect, bedConfiguration, toddlerBed, adultCapacity, description)
-- [ ] 4.2 Implement room information page displaying all five rooms with their details
-- [ ] 4.3 Implement Administrator room edit API (update description/capacity only, no add/delete)
-- [ ] 4.4 Build room picker UI component for use in booking forms (checkbox per room + "Whole house" toggle)
+- [ ] 4.1 Create Room model in Prisma schema (name, architect, bedConfiguration, toddlerBed, adultCapacity, description) and ArchitectProfile model (fullName, lifespan, biography, notableWorks, familyConnection, externalLinks)
+- [ ] 4.2 Create database seed script with the five rooms and their architect profiles (Fehn, Knutsen, Utzon, Arneberg, Korsmo)
+- [ ] 4.3 Implement room information page displaying all five rooms with their details
+- [ ] 4.4 Build architect profile overlay popup component (triggered from room name / info icon anywhere in the app)
+- [ ] 4.5 Implement Administrator room and architect profile edit API (update descriptions only, no add/delete rooms)
+- [ ] 4.6 Build room picker UI component for use in booking forms (checkbox per room + "Whole house" toggle)
 
 ## 5. Quota Allocation (quota-allocation)
 

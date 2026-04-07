@@ -3,9 +3,13 @@
 ### Requirement: Quota period definition
 An Administrator SHALL be able to define the vacation season and divide it into quota periods, each assigned to a Quota Owner.
 
-#### Scenario: Create a season
-- **WHEN** an Administrator defines a new season with a start date and end date
-- **THEN** the system SHALL create a season that spans those dates
+#### Scenario: Create a season with default dates
+- **WHEN** an Administrator creates a new season for a given year without specifying dates
+- **THEN** the system SHALL default to June 1 through August 31 of that year
+
+#### Scenario: Create a season with custom dates
+- **WHEN** an Administrator defines a new season with explicit start and end dates
+- **THEN** the system SHALL create a season that spans those dates, overriding the default
 
 #### Scenario: Allocate a quota period
 - **WHEN** an Administrator assigns a date range within the season to a Quota Owner

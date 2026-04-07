@@ -1,11 +1,15 @@
 ## ADDED Requirements
 
 ### Requirement: Season calendar view
-The system SHALL display a calendar view showing the full vacation season with quota allocations, room-level bookings, and availability.
+The system SHALL display a compact calendar view scoped to the vacation season dates, showing quota allocations, room-level bookings, and availability. The calendar SHALL only render the season's date range (e.g., June–August), not the full calendar year.
 
 #### Scenario: View season overview
 - **WHEN** any authenticated user navigates to the dashboard
-- **THEN** the system SHALL display a calendar for the current season showing quota periods color-coded by Quota Owner, confirmed bookings with room details, and unallocated dates
+- **THEN** the system SHALL display a compact calendar spanning only the current season's start-to-end dates, showing quota periods color-coded by Quota Owner, confirmed bookings with room details, and unallocated dates
+
+#### Scenario: Compact season layout
+- **WHEN** the season spans June 1 through August 31
+- **THEN** the calendar SHALL render exactly those three months in a dense layout (e.g., weeks as rows, days as columns), without showing January–May or September–December
 
 #### Scenario: Visual distinction of booking statuses
 - **WHEN** the calendar displays bookings

@@ -158,7 +158,7 @@ Properties have a setting controlling what happens when a day has no quota and n
 | `auto_approve` (default) | Request for that day is confirmed immediately — no action required |
 | `admin_approval` | Request is routed to any property admin for approval |
 
-`auto_approve` is the right default for properties where all time is open and the booking system is mainly for visibility. `admin_approval` suits properties that want an admin to sign off on all bookings, regardless of whether a quota period covers the day — for example, a property where unallocated days are not generally available without explicit permission.
+This setting only governs days that fall outside any quota period — quota holders always have full authority to approve or reject requests within their own quota, regardless of this setting. `auto_approve` is the right default for properties where unallocated time is open to anyone and the booking system is mainly for visibility. `admin_approval` suits properties where unallocated days are not generally available without explicit permission — for example, a cabin that is otherwise closed outside of quota periods.
 
 A booking request for June 10–20 might yield:
 - Days 10–14: auto-confirmed

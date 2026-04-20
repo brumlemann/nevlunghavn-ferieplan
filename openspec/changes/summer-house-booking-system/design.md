@@ -13,7 +13,7 @@ Coordination at Nevlunghavn currently happens informally. The family has multipl
 - Enforce a property-scoped two-tier role model: Admin and Member
 - Allow Members with quota to manage their allotted periods and approve booking requests
 - Allow all Members to request bookings within any period
-- Support whole-property booking by default, with optional room-level granularity per property
+- Support whole-property booking (room-level granularity is a v2 feature — see decision 9)
 - Sync bookings to users' calendars via ICS feeds
 - Notify users of booking requests, approvals, and cancellations via email and in-app badges
 - Present a clear calendar dashboard showing the full season
@@ -24,6 +24,7 @@ Coordination at Nevlunghavn currently happens informally. The family has multipl
 - Real-time collaboration / chat features
 - Automated conflict resolution (day owners decide manually)
 - Push notifications or SMS (email + in-app badge is sufficient for v1)
+- Room-level booking granularity (deferred to v2 — architecture accommodates it, see decision 9)
 
 ## Decisions
 
@@ -117,41 +118,47 @@ A user can be Admin on one property and Member on another. "Quota Owner" is not 
 **Alternatives considered:**
 - Three-tier model (Administrator, Quota Owner, Regular User) — Quota Owner felt like an artificial role tier; quota is just a data relationship
 
-### 9. Room Model: Optional Per-Property Feature
+### 9. Room Model: Whole-Property for v1, Room-Level in v2
 
-**Choice:** Room-level granularity is an optional feature that property admins can enable. The default booking mode is **whole-property** — booking the entire cabin for a date range.
+**Choice:** v1 supports **whole-property booking only** — one confirmed booking per day per property. Room-level granularity is deferred to v2, but the data model is designed from the start to accommodate it without a breaking migration.
 
-| Mode | Conflict rule |
-|------|--------------|
-| Whole-property (default) | One confirmed booking per day per property |
-| Rooms enabled | One confirmed booking per room per day; admin configures room names, bed types, and capacity |
+**Data model consideration:** The `Room` entity and its relationship to day-claims should be present in the schema from day one, even if v1 never writes to it. When room-level is added in v2, admins will configure room names, a short description (so members can tell them apart — creative names alone are not enough), bed type, capacity, and whether a toddler bed is available. Day-claims gain an optional `room_id` foreign key; a null `room_id` means a whole-property claim.
 
-When rooms are enabled, a member can book specific rooms (partial booking, signalling space for others) or claim all rooms (whole-house, exclusive use).
+**Rationale:** Room-level bookings add meaningful UI and approval-flow complexity — members must select rooms, the calendar must display per-room availability, and overlap detection becomes per-room rather than per-property. This is out of scope for the MVP. However, knowing that v2 will add it means the database schema must be designed to allow it — retrofitting a room model onto an existing booking table is painful. Designing the schema with rooms from day one, but leaving the feature flag off, is the right trade-off.
 
-**Rationale:** Most small cabins don't need room-level tracking, and forcing it on every property adds unnecessary UI complexity. Room granularity is valuable for larger properties like Nevlunghavn where multiple families share simultaneously. Making it optional keeps the default case simple.
+The Nevlunghavn property would enable rooms in v2 with the five architect-named rooms (initial seed data, not part of the core schema):
 
-The Nevlunghavn property would have rooms enabled with the five architect-named rooms:
-
-| Room | Architect | Beds | Toddler bed | Sleeps |
-|------|-----------|------|-------------|--------|
-| Fehn | Sverre Fehn | Two separate singles | No | 2 |
-| Knutsen | Knut Knutsen | Double (conjoined) | Yes | 2 (+1) |
-| Utzon | Jørn Utzon | Double (conjoined) | Yes | 2 (+1) |
-| Arneberg | Arnstein Arneberg | Double (conjoined) | No | 2 |
-| Korsmo | Arne Korsmo | Double (conjoined) | No | 2 |
+| Room | Architect | Description | Beds | Toddler bed | Sleeps |
+|------|-----------|-------------|------|-------------|--------|
+| Fehn | Sverre Fehn | Corner room on the ground floor, two windows | Two separate singles | No | 2 |
+| Knutsen | Knut Knutsen | Largest room, faces the garden | Double (conjoined) | Yes | 2 (+1) |
+| Utzon | Jørn Utzon | Top floor, sloped ceiling, sea view | Double (conjoined) | Yes | 2 (+1) |
+| Arneberg | Arnstein Arneberg | Quiet room at the back, ground floor | Double (conjoined) | No | 2 |
+| Korsmo | Arne Korsmo | Small room next to the bathroom | Double (conjoined) | No | 2 |
 
 **Alternatives considered:**
-- Always requiring room selection — unnecessarily complex for simple cabins
-- A generic "how many beds" number — loses room identity and makes shared stays opaque
+- Add room-level to v1 — higher complexity, delays launch; the whole-property model is sufficient for most bookings
+- Ignore rooms entirely until v2 — risks a painful schema migration; better to reserve the shape now
 
 ### 10. Booking Model: Day-Level Claims
 
 **Choice:** A booking represents a contiguous range of **day-claims** on a property (or room, if rooms are enabled). Day-claims within a booking are grouped for display purposes but resolved individually through the approval flow.
 
 **How resolution works for a single booking request:**
-- Day with no quota and no existing booking → **auto-confirmed**
+- Day with no quota and no existing booking → **depends on property setting** (see below)
 - Day within a member's quota period → **quota holder approves**
 - Day with an existing confirmed booking → **first booker approves** (they own the day, having already received quota approval)
+
+**Property setting: unowned-day approval mode**
+
+Properties have a setting controlling what happens when a day has no quota and no existing booking:
+
+| Mode | Behaviour |
+|------|-----------|
+| `auto_approve` (default) | Request for that day is confirmed immediately — no action required |
+| `admin_approval` | Request is routed to any property admin for approval |
+
+`auto_approve` is the right default for properties where all time is open and the booking system is mainly for visibility. `admin_approval` suits properties that want an admin to sign off on all bookings, regardless of whether a quota period covers the day — for example, a property where unallocated days are not generally available without explicit permission.
 
 A booking request for June 10–20 might yield:
 - Days 10–14: auto-confirmed

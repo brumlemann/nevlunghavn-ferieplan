@@ -12,8 +12,9 @@ The system is designed from the start as a platform — **Hyttekabalen** — whe
 - Implement a two-tier, property-scoped role model: **Admin** and **Member**
 - Admins configure property settings, manage rooms, invite members, and allocate quota periods
 - Members view the calendar and make booking requests; members with quota allocated approve/decline requests within their quota periods
-- Default booking mode is whole-property; room-level granularity is optional and enabled per property
-- Day-level booking resolution: each day in a request is independently auto-confirmed, routed to the quota holder, or routed to the existing booking holder for approval
+- Default booking mode is whole-property for v1; room-level granularity is a v2 feature (data model accommodates it from day one)
+- Properties have an unowned-day approval setting: auto-approve (default) or require admin approval for days with no quota and no existing booking
+- Day-level booking resolution: each day in a request is independently resolved (auto-confirmed, routed to quota holder, or routed to existing booking holder) based on property settings
 - Approval-based overlap replaces the transition-day concept: any overlap triggers an approval flow with a message from the requester
 - Cascading cancellation: when a booking is cancelled, pending requests for those days are deleted with notification to each requester
 - Sync bookings to users' calendars via ICS feeds (subscribe in any calendar app)
@@ -26,9 +27,8 @@ The system is designed from the start as a platform — **Hyttekabalen** — whe
 - `property-management`: User-creatable properties with name, description, and configuration; multi-property membership with independent roles per property
 - `role-management`: Two-tier property-scoped role system (Admin, Member) with role assignment and permissions
 - `quota-allocation`: Seasonal quota periods assigned to Members representing family branches; quota is a data attribute, not a role
-- `booking-requests`: Members request bookings by date range; day-level resolution routes each day to the appropriate approver (auto, quota holder, or existing booker); partial bookings supported
+- `booking-requests`: Members request bookings by date range; day-level resolution routes each day based on quota, existing bookings, and the property's unowned-day approval setting; partial bookings supported
 - `approval-flow`: Approval routing per day-claim with message attachment from requester; existing booker approves overlapping requests; cascading cancellation with requester notification
-- `room-management`: Optional per-property feature; admin configures room names, bed types, and capacity; when enabled, bookings are per room per day
 - `ics-calendar-sync`: Dynamically generated ICS feed URLs per user per property and per property-wide; users subscribe in any calendar app
 - `notifications`: Email notifications via Resend for booking events; in-app notification badge for pending approvals
 - `booking-dashboard`: Overview of the season calendar showing quota allocations, bookings, and availability
@@ -44,5 +44,5 @@ None — this is a greenfield project.
 - Resend account required for transactional email delivery
 - Neon PostgreSQL project required for persistent storage
 - Vercel project required for deployment
-- Persistent storage needed for: users, properties, memberships (with roles), quota periods, bookings, day-claims, rooms (optional), and notification records
+- Persistent storage needed for: users, properties, memberships (with roles), quota periods, bookings, day-claims, rooms (schema present in v1, feature active in v2), and notification records
 - No existing systems are affected — this is a greenfield project

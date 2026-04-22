@@ -85,13 +85,7 @@ Calendar scopes are **not** requested during login. Calendar sync is handled via
 - Self-hosted on a VPS — more maintenance burden for a low-traffic family app
 - Supabase for both auth and database — heavier than needed; using Auth.js + Neon keeps concerns separated
 
-### 6. Calendar UI: react-big-calendar or Similar
-
-**Choice:** Use an established React calendar component for the booking dashboard.
-
-**Rationale:** A calendar view is the core UI for seeing availability and bookings. An off-the-shelf component avoids reinventing complex date rendering and interaction logic.
-
-### 7. Multi-Property Architecture
+### 6. Multi-Property Architecture
 
 **Choice:** Property is a first-class, user-creatable entity. Every booking, quota, role, and room belongs to a property. A user can be a member of multiple properties with independent roles on each.
 
@@ -102,7 +96,7 @@ The Nevlunghavn house is the first property created on the platform. Its archite
 **Alternatives considered:**
 - Hardcoded single-property model — simpler initially but creates a ceiling that forces a costly rewrite if the platform is extended
 
-### 8. Role Model: Two Property-Scoped Roles
+### 7. Role Model: Two Property-Scoped Roles
 
 **Choice:** Two roles per property — **Admin** and **Member**. Both are stored as property memberships with a role field.
 
@@ -118,7 +112,7 @@ A user can be Admin on one property and Member on another. "Quota Owner" is not 
 **Alternatives considered:**
 - Three-tier model (Administrator, Quota Owner, Regular User) — Quota Owner felt like an artificial role tier; quota is just a data relationship
 
-### 9. Room Model: Whole-Property for v1, Room-Level in v2
+### 8. Room Model: Whole-Property for v1, Room-Level in v2
 
 **Choice:** v1 supports **whole-property booking only** — one confirmed booking per day per property. Room-level granularity is deferred to v2, but the data model is designed from the start to accommodate it without a breaking migration.
 
@@ -140,7 +134,7 @@ The Nevlunghavn property would enable rooms in v2 with the five architect-named 
 - Add room-level to v1 — higher complexity, delays launch; the whole-property model is sufficient for most bookings
 - Ignore rooms entirely until v2 — risks a painful schema migration; better to reserve the shape now
 
-### 10. Booking Model: Day-Level Claims
+### 9. Booking Model: Day-Level Claims
 
 **Choice:** A booking represents a contiguous range of **day-claims** on a property (or room, if rooms are enabled). Day-claims within a booking are grouped for display purposes but resolved individually through the approval flow.
 
@@ -172,7 +166,7 @@ If some segments are approved and others rejected, the requester receives a part
 **Alternatives considered:**
 - Atomic booking approval — simpler but less flexible; a single conflicting day blocks the whole request
 
-### 11. Approval-Based Overlap (Replacing Transition Days)
+### 10. Approval-Based Overlap (Replacing Transition Days)
 
 **Choice:** Remove the transition-day concept. Any booking request that overlaps with an existing confirmed booking triggers an approval flow to the owner of that day. The requester attaches a message to the request (e.g., "Arriving at 3pm, ok if we overlap?").
 
@@ -183,7 +177,7 @@ If some segments are approved and others rejected, the requester receives a part
 **Alternatives considered:**
 - Keep transition-day rule — handles the specific lunch/dinner overlap case but doesn't generalise to other durations or explicit negotiated overlaps
 
-### 12. Cascading Cancellation
+### 11. Cascading Cancellation
 
 **Choice:** When a confirmed booking is cancelled:
 1. All pending requests routed to that booker (i.e., requests for days they "owned") are deleted with a notification to each affected requester
@@ -197,7 +191,7 @@ No automatic re-routing. Delete and notify is sufficient for a family app.
 **Alternatives considered:**
 - Automatic re-routing — complex to implement correctly; doesn't account for the requester having changed their plans in the meantime
 
-### 13. Notification System
+### 12. Notification System
 
 **Choice:** Two notification channels for v1:
 - **Email notifications** via [Resend](https://resend.com) for: new booking requests requiring approval, booking approvals/rejections, cancellations affecting pending requests

@@ -136,12 +136,14 @@ The Nevlunghavn property would enable rooms in v2 with the five architect-named 
 
 ### 9. Booking Model: Day-Level Claims
 
-**Choice:** A booking represents a contiguous range of **day-claims** on a property (or room, if rooms are enabled). Day-claims within a booking are grouped for display purposes but resolved individually through the approval flow.
+**Choice:** When a member requests a date range, the system splits the request at submission time into separate bookings based on **approval boundaries**. Each booking covers a contiguous range of days that share the same approver (or auto-approval rule). Each booking has exactly one approver — there are no multi-approver bookings.
 
-**How resolution works for a single booking request:**
-- Day with no quota and no existing booking → **depends on property setting** (see below)
-- Day within a member's quota period → **quota holder approves**
-- Day with an existing confirmed booking → **first booker approves** (they own the day, having already received quota approval)
+**How the split works:** A request for June 10–20 where days 10–14 are unowned, 15–17 fall in a quota period, and 18–20 overlap an existing booking produces three separate bookings, each routed independently.
+
+**Approval routing per booking:**
+- Days with no quota and no existing booking → **depends on property setting** (see below)
+- Days within a member's quota period → **quota holder approves**
+- Days with an existing approved booking → **existing booker approves** (they own the day, having already received quota approval)
 
 **Property setting: unowned-day approval mode**
 
@@ -149,22 +151,16 @@ Properties have a setting controlling what happens when a day has no quota and n
 
 | Mode | Behaviour |
 |------|-----------|
-| `auto_approve` (default) | Request for that day is confirmed immediately — no action required |
-| `admin_approval` | Request is routed to any property admin for approval |
+| `auto_approve` (default) | Booking for those days is confirmed immediately — no action required |
+| `admin_approval` | Booking is routed to any property admin for approval |
 
 This setting only governs days that fall outside any quota period — quota holders always have full authority to approve or reject requests within their own quota, regardless of this setting. `auto_approve` is the right default for properties where unallocated time is open to anyone and the booking system is mainly for visibility. `admin_approval` suits properties where unallocated days are not generally available without explicit permission — for example, a cabin that is otherwise closed outside of quota periods.
 
-A booking request for June 10–20 might yield:
-- Days 10–14: auto-confirmed
-- Days 15–17: pending approval from quota holder
-- Days 18–20: pending approval from existing booking holder
-
-If some segments are approved and others rejected, the requester receives a partial booking and can decide whether to keep it or cancel.
-
-**Rationale:** Day-level resolution is more precise than treating a booking request as a single atomic unit. It avoids situations where an entire request is blocked because a single day has a conflict. It also naturally handles the multi-approver scenario where different days are owned by different people.
+**Rationale:** Splitting at submission time means each booking has a single approver and an independent lifecycle. This eliminates partial-booking states where some days are approved and others are pending from different people. Cancellation is clean — cancelling one booking doesn't affect adjacent bookings from the same request. Users don't need to reason about mixed-status bookings. The split is transparent to the user: they select one date range and the system creates the appropriate bookings behind the scenes. Each booking appears as its own segment in the booking overview.
 
 **Alternatives considered:**
-- Atomic booking approval — simpler but less flexible; a single conflicting day blocks the whole request
+- Single booking with day-level resolution — creates multi-approver coordination complexity and partial-booking UX problems
+- Atomic booking approval — too restrictive; a single conflicting day blocks the whole request
 
 ### 10. Approval-Based Overlap (Replacing Transition Days)
 
@@ -205,9 +201,7 @@ No automatic re-routing. Delete and notify is sufficient for a family app.
 
 ## Risks / Trade-offs
 
-- **Partial bookings** → The day-level model means a request can result in a partial booking where some days are confirmed and others are pending or rejected. The UI must communicate this clearly, and users need a way to decide whether a partial booking is acceptable before accepting it.
 - **ICS poll latency** → Calendar apps poll ICS feeds infrequently (Google: ~12–24h). Changes will not appear instantly. Mitigation: set this expectation in the UI ("your calendar app will update within 24 hours"). This is acceptable for a family booking app, not a real-time scheduling tool.
-- **Multi-approver coordination** → A single booking request may require approvals from multiple people (quota holder for some days, existing booker for others). This creates the possibility of partial approval states lasting for days. Mitigation: clear UI showing which days are pending which approval; requesters can cancel and re-request if partial state is not useful.
 - **Quota fairness disputes** → The system enforces structure but cannot resolve interpersonal disagreements. Mitigation: Admin role can override allocations; the system provides transparency via the dashboard.
 - **Single point of failure** → Vercel or Neon downtime makes the system unavailable. Mitigation: acceptable risk for a family app; data is backed up via Prisma migrations and can be redeployed elsewhere.
 - **Multi-property scope creep** → The platform framing invites over-engineering. Mitigation: build the data model multi-property-aware from day one, but keep the UI focused on a single property per user session. Don't build a property marketplace.
@@ -215,6 +209,4 @@ No automatic re-routing. Delete and notify is sufficient for a family app.
 
 ## Open Questions
 
-- Should the system support recurring annual quota templates, or should Admins set up quotas fresh each season?
 - Should Members be able to delegate approval rights to another member for a period they own (e.g., when on holiday without internet)?
-- What is the UX when a requester's partial booking has some days approved and others still pending — should there be a deadline for the approval before the partial booking auto-expires?

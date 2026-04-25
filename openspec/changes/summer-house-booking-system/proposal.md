@@ -14,7 +14,7 @@ The system is designed from the start as a platform — **Hyttekabalen** — whe
 - Members view the calendar and make booking requests; members with quota allocated approve/decline requests within their quota periods
 - Default booking mode is whole-property for v1; room-level granularity is a v2 feature (data model accommodates it from day one)
 - Properties have an unowned-day approval setting: auto-approve (default) or require admin approval for days with no quota and no existing booking
-- Day-level booking resolution: each day in a request is independently resolved (auto-confirmed, routed to quota holder, or routed to existing booking holder) based on property settings
+- Booking requests are split at submission into separate bookings per approval boundary — each booking has exactly one approver or is auto-approved; no multi-approver bookings
 - Approval-based overlap replaces the transition-day concept: any overlap triggers an approval flow with a message from the requester
 - Cascading cancellation: when a booking is cancelled, pending requests for those days are deleted with notification to each requester
 - Sync bookings to users' calendars via ICS feeds (subscribe in any calendar app)
@@ -23,15 +23,11 @@ The system is designed from the start as a platform — **Hyttekabalen** — whe
 ## Capabilities
 
 ### New Capabilities
-- `auth`: Multi-provider authentication (Google, Apple, email magic links) via Auth.js, with session management
-- `property-management`: User-creatable properties with name, description, and configuration; multi-property membership with independent roles per property
-- `role-management`: Two-tier property-scoped role system (Admin, Member) with role assignment and permissions
-- `quota-allocation`: Seasonal quota periods assigned to Members representing family branches; quota is a data attribute, not a role
-- `booking-requests`: Members request bookings by date range; day-level resolution routes each day based on quota, existing bookings, and the property's unowned-day approval setting; partial bookings supported
-- `approval-flow`: Approval routing per day-claim with message attachment from requester; existing booker approves overlapping requests; cascading cancellation with requester notification
-- `ics-calendar-sync`: Dynamically generated ICS feed URLs per user per property and per property-wide; users subscribe in any calendar app
-- `notifications`: Email notifications via Resend for booking events; in-app notification badge for pending approvals
-- `booking-dashboard`: Overview of the season calendar showing quota allocations, bookings, and availability
+- `auth`: Multi-provider authentication (Google, Apple, email magic links) via Auth.js, with session management; email is a hard requirement for all users
+- `properties`: User-creatable properties with progressive-disclosure creation flow (name, rooms, approval mode, invitations); property-scoped roles (Admin, Member); property info, editing, and soft deletion; invitation system via Resend
+- `quotas-and-bookings`: Manual quota allocation by admins; booking requests split at submission per approval boundary; single-approver routing (auto, quota holder, existing booker, or admin); approval-based overlap; cascading cancellation; booking overview with quota and booking visibility
+- `notifications`: Dual-channel notifications (email via Resend + in-app badge with count); notification screen for viewing and acting on notifications; deep links from email
+- `ics-calendar-sync`: Dynamically generated ICS feed URLs with cryptographically random tokens; per-user-per-property and property-wide feeds; approved bookings and pending requests in feed; subscription prompts at key moments
 
 ### Modified Capabilities
 

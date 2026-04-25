@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 .idea/
+*.iws
+*.iml
+*.ipr
 
 # debug
 npm-debug.log*

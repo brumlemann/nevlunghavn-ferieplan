@@ -16,6 +16,7 @@ export type Room = {
   doubleBeds: number
   singleBeds: number
   toddlerCribs: number
+  createdAt: Date
   deletedAt: Date | null
 }
 

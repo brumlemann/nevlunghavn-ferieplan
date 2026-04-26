@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test'
-import { isActionable, isUnread } from '../notification'
+import { isActionable, isUnread, isResolved } from '../notification'
 import type { Notification } from '../notification'
 
 const base = {
@@ -42,5 +42,17 @@ describe('isUnread', () => {
   it('returns false when readAt is set', () => {
     const n: Notification = { ...base, type: 'property_deleted', actionable: false, readAt: new Date() }
     expect(isUnread(n)).toBe(false)
+  })
+})
+
+describe('isResolved', () => {
+  it('returns false when resolvedAt is null', () => {
+    const n: Notification = { ...base, type: 'property_deleted', actionable: false }
+    expect(isResolved(n)).toBe(false)
+  })
+
+  it('returns true when resolvedAt is set', () => {
+    const n: Notification = { ...base, type: 'property_deleted', actionable: false, resolvedAt: new Date() }
+    expect(isResolved(n)).toBe(true)
   })
 })

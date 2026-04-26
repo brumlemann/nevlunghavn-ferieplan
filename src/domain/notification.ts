@@ -81,9 +81,13 @@ export type Notification =
 export function isActionable(
   notification: Notification
 ): notification is PropertyInvitationNotification | BookingRequestNotification {
-  return notification.type === 'property_invitation' || notification.type === 'booking_request'
+  return notification.actionable
 }
 
 export function isUnread(notification: Notification): boolean {
   return notification.readAt === null
+}
+
+export function isResolved(notification: Notification): boolean {
+  return notification.resolvedAt !== null
 }

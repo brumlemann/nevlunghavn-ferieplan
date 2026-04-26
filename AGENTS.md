@@ -37,3 +37,10 @@ Read the relevant spec before implementing any feature. The spec describes WHAT,
 - All user-facing strings go through next-intl, never hardcode text in components
 - Messages live in messages/en.json, namespaced by feature (booking, property, auth)
 - Default locale is en, Norwegian (nb) will be added later
+
+## Data Fetching Pattern
+- Server actions for all data access (no API routes)
+- Server components call actions directly for initialData
+- Client components use React Query (useQuery/useMutation) with server actions as queryFn
+- Mutations invalidate relevant queries on success
+- No useEffect + fetch, no raw useState for server data

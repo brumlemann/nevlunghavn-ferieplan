@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test'
-import { isActiveBooking, approverUserId } from '../booking'
-import type { Booking } from '../booking'
+import { isActiveBooking, approverUserId } from './booking'
+import type { Booking } from './booking'
 
 const base: Booking = {
   id: 'b1',

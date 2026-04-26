@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test'
-import { overlaps, containsDate } from '../quota'
-import type { QuotaPeriod } from '../quota'
+import { overlaps, containsDate } from './quota'
+import type { QuotaPeriod } from './quota'
 
 function makeQuota(start: string, end: string): QuotaPeriod {
   return {

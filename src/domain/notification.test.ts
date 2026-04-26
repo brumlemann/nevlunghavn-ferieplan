@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test'
-import { isActionable, isUnread, isResolved } from '../notification'
-import type { Notification } from '../notification'
+import { isActionable, isUnread, isResolved } from './notification'
+import type { Notification } from './notification'
 
 const base = {
   id: 'n1',

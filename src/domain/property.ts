@@ -20,6 +20,3 @@ export type Room = {
   deletedAt: Date | null
 }
 
-export function isAutoApprove(property: Property): boolean {
-  return property.unownedDayApprovalMode === 'auto_approve'
-}

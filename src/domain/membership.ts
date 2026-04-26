@@ -22,6 +22,3 @@ export type PropertyInvitation = {
   respondedAt: Date | null
 }
 
-export function isAdmin(membership: Membership): boolean {
-  return membership.role === 'admin'
-}

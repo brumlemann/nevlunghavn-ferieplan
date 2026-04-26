@@ -26,8 +26,16 @@ export function isActiveBooking(booking: Booking): boolean {
 
 export function approverUserId(booking: Booking): string | null {
   const route = booking.approvalRoute
-  if (route.kind === 'quota_holder' || route.kind === 'existing_booker') {
-    return route.userId
+  switch (route.kind) {
+    case 'quota_holder':
+    case 'existing_booker':
+      return route.userId
+    case 'auto':
+    case 'admin':
+      return null
+    default: {
+      const _exhaustive: never = route
+      throw new Error(`Unhandled ApprovalRoute kind: ${JSON.stringify(_exhaustive)}`)
+    }
   }
-  return null
 }

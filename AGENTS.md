@@ -65,6 +65,11 @@ pure functions. Domain files live in `src/domain/`.
   lives in the file of the output type.
 - **Throw on invariant violations**: Functions that receive data that must
   always be valid throw with a descriptive message rather than returning null.
+- **Prefer discriminated unions over nullable fields**: When a concept has
+  meaningfully different variants (e.g. notification types, approval routes),
+  model each variant as a union member with only the fields it actually needs.
+  Avoid `fieldX?: string` that only applies to some variants — use
+  `| { kind: 'x'; fieldX: string }` instead.
 - **Domain files are pure**: No database queries, no server action imports,
   no side effects. Server actions in `app/*/actions.ts` call domain functions
   for logic, then call the database for persistence.
@@ -83,3 +88,37 @@ pure functions. Domain files live in `src/domain/`.
 - **Dependency direction**: `app/` → `components/` + `actions/`,
   `actions/` → `domain/` + `db/`, `domain/` → nothing.
   Never import upward.
+
+## Test Writing Guidelines
+
+See `AGENTS_TESTING.md` for detailed guidelines on writing unit and E2E tests in this codebase. Unit tests are colocated with source files (`.test.ts` / `.test.tsx`).
+
+## Styling
+- Tailwind CSS utility classes, no component library
+- Reusable UI primitives (Button, Input, Modal) live in components/ui/
+- No inline styles, no CSS modules
+
+## Design Tokens
+All colors, fonts, and spacing from the Stitch design system must be
+defined as Tailwind theme tokens in tailwind.config.ts. Never use raw
+hex values, rgb, or arbitrary Tailwind values like bg-[#2D5A27] in
+components.
+
+### Colors (from Stitch design system)
+- primary: #2D5A27 (forest green — primary actions, active nav)
+- secondary: #E8F0E7 (light sage — backgrounds, secondary buttons)
+- tertiary: #D4A373 (warm tan — accents, highlights)
+- neutral: #757872 (grey — muted text, dividers)
+- Map full shade scales from Stitch into primary-50 through primary-900 etc.
+
+### Typography
+- Headings: Plus Jakarta Sans
+- Body: Plus Jakarta Sans
+- Labels: Work Sans
+- Define as fontFamily tokens in tailwind.config.ts
+
+### Usage rules
+- Reference tokens as bg-primary, text-tertiary, font-heading etc.
+- If a color from the design doesn't exist as a token, add it to
+  the config — don't use arbitrary values
+- Agents must read tailwind.config.ts before creating any component

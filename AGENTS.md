@@ -65,6 +65,11 @@ pure functions. Domain files live in `src/domain/`.
   lives in the file of the output type.
 - **Throw on invariant violations**: Functions that receive data that must
   always be valid throw with a descriptive message rather than returning null.
+- **Prefer discriminated unions over nullable fields**: When a concept has
+  meaningfully different variants (e.g. notification types, approval routes),
+  model each variant as a union member with only the fields it actually needs.
+  Avoid `fieldX?: string` that only applies to some variants — use
+  `| { kind: 'x'; fieldX: string }` instead.
 - **Domain files are pure**: No database queries, no server action imports,
   no side effects. Server actions in `app/*/actions.ts` call domain functions
   for logic, then call the database for persistence.

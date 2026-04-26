@@ -1,11 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: ICS feed generation
-The system SHALL generate ICS calendar feeds for subscribing in any calendar app.
-
-#### Scenario: Per-user per-property feed
-- **WHEN** a user requests their personal ICS feed for a property
-- **THEN** the system SHALL return an ICS feed containing that user's bookings on the property
+The system SHALL generate a property-wide ICS calendar feed for subscribing in any calendar app. Per-user feeds are out of scope for v1.
 
 #### Scenario: Property-wide feed
 - **WHEN** a user requests the property-wide ICS feed
@@ -16,11 +12,11 @@ The system SHALL generate ICS calendar feeds for subscribing in any calendar app
 - **THEN** the system SHALL generate the feed dynamically from current booking state — no file storage
 
 ### Requirement: Feed URL security
-Feed URLs SHALL be unguessable and not require authentication.
+The feed URL SHALL be unguessable and not require authentication.
 
 #### Scenario: Random token in URL
-- **WHEN** a feed URL is generated
-- **THEN** it SHALL contain a cryptographically random token; the URL SHALL NOT be based on or derivable from user IDs, emails, or other guessable identifiers
+- **WHEN** a feed URL is generated for a property
+- **THEN** it SHALL contain a cryptographically random token; the URL SHALL NOT be based on or derivable from property IDs or other guessable identifiers
 
 ### Requirement: Feed content
 The ICS feed SHALL include approved bookings and pending requests.

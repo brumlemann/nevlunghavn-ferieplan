@@ -27,7 +27,7 @@ The system is designed from the start as a platform — **Hyttekabalen** — whe
 - `properties`: User-creatable properties with progressive-disclosure creation flow (name, rooms, approval mode, invitations); property-scoped roles (Admin, Member); property info, editing, and soft deletion; invitation system via Resend
 - `quotas-and-bookings`: Manual quota allocation by admins; booking requests split at submission per approval boundary; single-approver routing (auto, quota holder, existing booker, or admin); approval-based overlap; cascading cancellation; booking overview with quota and booking visibility
 - `notifications`: Dual-channel notifications (email via Resend + in-app badge with count); notification screen for viewing and acting on notifications; deep links from email
-- `ics-calendar-sync`: Dynamically generated ICS feed URLs with cryptographically random tokens; per-user-per-property and property-wide feeds; approved bookings and pending requests in feed; subscription prompts at key moments
+- `ics-calendar-sync`: Dynamically generated property-wide ICS feed URL with a cryptographically random token; approved bookings and pending requests in feed; subscription prompts at key moments
 
 ### Modified Capabilities
 

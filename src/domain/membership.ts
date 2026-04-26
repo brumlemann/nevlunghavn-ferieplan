@@ -9,7 +9,7 @@ export type Membership = {
   deletedAt: Date | null
 }
 
-export type InvitationStatus = 'pending' | 'accepted' | 'rejected'
+export type InvitationStatus = 'pending' | 'accepted' | 'rejected' | 'cancelled'
 
 export type PropertyInvitation = {
   id: string
